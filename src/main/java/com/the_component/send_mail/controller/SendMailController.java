@@ -18,10 +18,6 @@ public class SendMailController {
 
     @PostMapping("/save/{email}")
     ResponseEntity<String> saveEmail(@PathVariable("email")String email) {
-        if (!Email.isEmail(email)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Must be email");
-        }
-
         if (!sendMailService.saveEmail(email)) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Saving failed");
         }
@@ -31,9 +27,7 @@ public class SendMailController {
 
     @PostMapping("/sendMailWithCurrentTime/{email}")
     ResponseEntity<String> sendMailWithCurrentTime(@PathVariable("email")String email) {
-        if (!Email.isEmail(email)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Must be email");
-        }
+        sendMailService.sendMailWithCurrentTime(email);
         return ResponseEntity.status(HttpStatus.OK).body("Sending successful");
     }
 }

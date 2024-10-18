@@ -1,6 +1,8 @@
 package com.the_component.send_mail.utils.check;
 
 public class Email {
+    private Email() {}
+
     public static boolean isEmail(String input) {
         if (!input.contains("@") || !input.contains(".")) {
             return false;
@@ -10,7 +12,7 @@ public class Email {
         if (name.isEmpty()) {
             return false;
         }
-        for (int i =0; i< name.length(); i++) {
+        for (int i = 0; i < name.length(); i++) {
             char ele = name.charAt(i);
             if (!Character.isLetterOrDigit(ele) && ele != '.') {
                 return false;
@@ -22,7 +24,7 @@ public class Email {
             if (s.isEmpty()) {
                 return false;
             }
-            for (int i =0; i< s.length(); i++) {
+            for (int i = 0; i < s.length(); i++) {
                 char ele = s.charAt(i);
                 if (!Character.isLetter(ele)) {
                     return false;
