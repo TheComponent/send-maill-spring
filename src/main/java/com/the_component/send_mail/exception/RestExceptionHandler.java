@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = InValidMailFormatException.class)
+    @ExceptionHandler(value = {InValidMailFormatException.class, InvalidInputParameter.class})
     protected ResponseEntity<Object> handleInvalidEmailFormat(
         RuntimeException ex, WebRequest request) {
         String bodyOfResponse = ex.getMessage();
@@ -26,4 +26,5 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse,
             new HttpHeaders(), HttpStatus.BAD_GATEWAY, request);
     }
+
 }

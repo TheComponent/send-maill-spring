@@ -3,12 +3,7 @@ package com.the_component.send_mail.service;
 public interface SendMailService {
     boolean saveEmail(String email);
 
-    boolean sendMailWithCurrentTime(String email);
-
-    boolean sendMailWithString(String email, String content);
-
-    boolean isExpireCode(String email);
-
-
-
+    void sendMail(String sourceEmail, String destinationEmail, String subject,
+                  String[] bcc, String[] cc, String content,
+                  String fileName, String resource);
 }
