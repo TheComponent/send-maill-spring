@@ -85,13 +85,6 @@ public class SendMailServiceImpl implements SendMailService {
             }
         });
         executor.shutdown();
-        try {
-            if (!executor.awaitTermination(100, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 
 }
