@@ -9,7 +9,9 @@ import com.the_component.send_mail.service.SendMailService;
 import com.the_component.send_mail.utils.check.Email;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class SendMailServiceImpl implements SendMailService {
     private final SendMailRepository sendMailRepository;
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String sourceMail;
 
     ThreadPoolExecutor executor;
 
@@ -36,29 +41,36 @@ public class SendMailServiceImpl implements SendMailService {
     }
 
     @Override
-    public void sendMail(String sourceEmail, String destinationEmail, String subject,
+    public void sendMail(String destinationEmail, String subject,
                          String[] bcc, String[] cc, String content,
                          String fileName, String resource) {
-        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
         executor.submit(() -> {
             try {
                 javaMailSender.send(mimeMessage -> {
                     MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-                    if (!Email.isEmail(sourceEmail)) {
-                        throw new InvalidInputParameter(sourceEmail + " is not a valid email!");
-                    }
-                    message.setFrom(sourceEmail);
+                    message.setFrom(sourceMail);
 
                     if (!Email.isEmail(destinationEmail)) {
                         throw new InvalidInputParameter(destinationEmail + " is not a valid email!");
                     }
                     message.setTo(destinationEmail);
 
-                    message.setSubject(subject);
-                    message.setBcc(bcc);
-                    message.setCc(cc);
-                    message.setText(content);
+                    if (subject != null) {
+                        message.setSubject(subject);
+                    }
+
+                    if (bcc != null) {
+                        message.setBcc(bcc);
+                    }
+
+                    if (cc != null) {
+                        message.setCc(cc);
+                    }
+
+                    if (content != null) {
+                        message.setText("HEHE");
+                    }
 
                     try {
                         if (fileName != null && resource != null) {
@@ -72,7 +84,14 @@ public class SendMailServiceImpl implements SendMailService {
                 throw new FailedSendEmailException("Error while sending email: " + e.getMessage());
             }
         });
-
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(100, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }

@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SendMailController {
     private final SendMailService sendMailService;
 
-    @Value("${spring.mail.username}")
-    String sourceMail;
-
     @PostMapping("/save/{email}")
     ResponseEntity<String> saveEmail(@PathVariable("email")String email) {
         if (!sendMailService.saveEmail(email)) {
@@ -31,7 +28,7 @@ public class SendMailController {
 
     @PostMapping("/sendMailWithCurrentTime/{email}")
     ResponseEntity<String> sendMailWithCurrentTime(@PathVariable("email")String email) {
-        sendMailService.sendMail(sourceMail, email,null,null,null,"HEHE",null,null);
+        sendMailService.sendMail(email,null,null,null,"HEHE",null,null);
         return ResponseEntity.status(HttpStatus.OK).body("Sent to your email");
     }
 }
