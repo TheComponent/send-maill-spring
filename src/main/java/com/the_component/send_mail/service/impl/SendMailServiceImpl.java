@@ -69,7 +69,7 @@ public class SendMailServiceImpl implements SendMailService {
                     }
 
                     if (content != null) {
-                        message.setText("HEHE");
+                        message.setText(content);
                     }
 
                     try {

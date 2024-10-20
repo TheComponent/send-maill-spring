@@ -28,7 +28,7 @@ public class SendMailController {
 
     @PostMapping("/sendMailWithCurrentTime/{email}")
     ResponseEntity<String> sendMailWithCurrentTime(@PathVariable("email")String email) {
-        sendMailService.sendMail(email,null,null,null,"HEHE",null,null);
+        sendMailService.sendMail(email, null, null, null, "HEHE", null, null);
         return ResponseEntity.status(HttpStatus.OK).body("Sent to your email");
     }
 }
