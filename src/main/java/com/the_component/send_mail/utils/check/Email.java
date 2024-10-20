@@ -32,10 +32,6 @@ public class Email {
             }
         }
 
-        if (input.split("@").length > 2) {
-            return false;
-        }
-
-        return true;
+        return input.split("@").length <= 2;
     }
 }
